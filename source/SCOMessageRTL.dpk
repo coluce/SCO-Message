@@ -1,0 +1,62 @@
+package SCOMessageRTL;
+
+{$R *.res}
+{$IFDEF IMPLICITBUILDING This IFDEF should not be used by users}
+{$ALIGN 8}
+{$ASSERTIONS ON}
+{$BOOLEVAL OFF}
+{$DEBUGINFO ON}
+{$EXTENDEDSYNTAX ON}
+{$IMPORTEDDATA ON}
+{$IOCHECKS ON}
+{$LOCALSYMBOLS ON}
+{$LONGSTRINGS ON}
+{$OPENSTRINGS ON}
+{$OPTIMIZATION OFF}
+{$OVERFLOWCHECKS OFF}
+{$RANGECHECKS OFF}
+{$REFERENCEINFO ON}
+{$SAFEDIVIDE OFF}
+{$STACKFRAMES ON}
+{$TYPEDADDRESS OFF}
+{$VARSTRINGCHECKS ON}
+{$WRITEABLECONST OFF}
+{$MINENUMSIZE 1}
+{$IMAGEBASE $400000}
+{$DEFINE DEBUG}
+{$ENDIF IMPLICITBUILDING}
+{$RUNONLY}
+{$IMPLICITBUILD ON}
+
+requires
+  rtl,
+  dbrtl,
+  CustomIPTransport,
+  dbexpress,
+  FireDAC,
+  FireDACCommonDriver,
+  FireDACCommon,
+  soaprtl,
+  fmx,
+  vcl,
+  IndySystem,
+  IndyCore,
+  IndyProtocols,
+  IndyIPCommon,
+  IndyIPClient;
+
+contains
+  SCO.Message.Functions in 'SCO.Message.Functions.pas',
+  SCO.Message.Base in 'SCO.Message.Base.pas',
+  SCO.Message.Zip in 'SCO.Message.Zip.pas',
+  SCO.Message.Client in 'SCO.Message.Client.pas',
+  SCO.Message.Server in 'SCO.Message.Server.pas',
+  SCO.Message.Interfaces in 'SCO.Message.Interfaces.pas',
+  SCO.Message.Route.Controller in 'SCO.Message.Route.Controller.pas',
+  SCO.Message.Route in 'SCO.Message.Route.pas',
+  SCO.Message.Imp in 'SCO.Message.Imp.pas';
+
+end.
+
+
+

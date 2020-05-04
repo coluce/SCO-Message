@@ -1,0 +1,126 @@
+object Form1: TForm1
+  Left = 0
+  Top = 0
+  Caption = 'Client'
+  ClientHeight = 380
+  ClientWidth = 640
+  FormFactor.Width = 320
+  FormFactor.Height = 480
+  FormFactor.Devices = [Desktop]
+  DesignerMasterStyle = 0
+  object EditUsuario: TEdit
+    Touch.InteractiveGestures = [LongTap, DoubleTap]
+    TabOrder = 2
+    Position.X = 8.000000000000000000
+    Position.Y = 8.000000000000000000
+    Size.Width = 193.000000000000000000
+    Size.Height = 22.000000000000000000
+    Size.PlatformDefault = False
+    TextPrompt = 'meu usuario'
+  end
+  object btnSendMessage: TButton
+    Anchors = [akRight, akBottom]
+    AutoTranslate = False
+    Position.X = 503.000000000000000000
+    Position.Y = 328.000000000000000000
+    TabOrder = 3
+    Text = 'Send'
+    OnClick = btnSendMessageClick
+  end
+  object edtMessage: TEdit
+    Touch.InteractiveGestures = [LongTap, DoubleTap]
+    Anchors = [akLeft, akRight, akBottom]
+    TabOrder = 4
+    Position.X = 112.000000000000000000
+    Position.Y = 328.000000000000000000
+    Size.Width = 385.000000000000000000
+    Size.Height = 22.000000000000000000
+    Size.PlatformDefault = False
+    TextPrompt = 'mensagem'
+  end
+  object edtDestinatario: TEdit
+    Touch.InteractiveGestures = [LongTap, DoubleTap]
+    Anchors = [akLeft, akBottom]
+    TabOrder = 1
+    Position.X = 8.000000000000000000
+    Position.Y = 328.000000000000000000
+    TextPrompt = 'destinatario'
+  end
+  object Button1: TButton
+    Position.X = 208.000000000000000000
+    Position.Y = 8.000000000000000000
+    TabOrder = 6
+    Text = 'Conectar'
+    OnClick = Button1Click
+  end
+  object ListView1: TListView
+    ItemAppearanceClassName = 'TListItemAppearance'
+    ItemEditAppearanceClassName = 'TListItemShowCheckAppearance'
+    HeaderAppearanceClassName = 'TListHeaderObjects'
+    FooterAppearanceClassName = 'TListHeaderObjects'
+    Anchors = [akLeft, akTop, akRight, akBottom]
+    Position.X = 8.000000000000000000
+    Position.Y = 40.000000000000000000
+    Size.Width = 625.000000000000000000
+    Size.Height = 281.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 10
+  end
+  object StatusBar1: TStatusBar
+    Position.Y = 358.000000000000000000
+    ShowSizeGrip = True
+    Size.Width = 640.000000000000000000
+    Size.Height = 22.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 11
+  end
+  object Switch1: TSwitch
+    IsChecked = False
+    Position.X = 589.000000000000000000
+    Position.Y = 325.000000000000000000
+    Size.Width = 46.000000000000000000
+    Size.Height = 27.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 14
+  end
+  object Clear: TButton
+    Anchors = [akTop, akRight]
+    Position.X = 552.000000000000000000
+    Position.Y = 8.000000000000000000
+    TabOrder = 16
+    Text = 'Clear'
+    OnClick = ClearClick
+  end
+  object Timer1: TTimer
+    Enabled = False
+    Interval = 100
+    OnTimer = Timer1Timer
+    Left = 400
+    Top = 80
+  end
+  object MensageriaCliente1: TMensageriaCliente
+    ConectadoRemoto = False
+    ConectadoRemotoStoredUsage = []
+    Servidor.Address = 'localhost'
+    Servidor.Port = 211
+    OnReconectar = MensageriaCliente1Reconectar
+    OnConectar = MensageriaCliente1Conectar
+    OnDesconectar = MensageriaCliente1Desconectar
+    OnReceberMensagem = MensageriaCliente1ReceberMensagem
+    Left = 328
+    Top = 80
+  end
+  object BindingsList1: TBindingsList
+    Methods = <>
+    OutputConverters = <>
+    Left = 236
+    Top = 77
+    object LinkControlToPropertyEnabled: TLinkControlToProperty
+      Category = 'Quick Bindings'
+      Control = Switch1
+      Track = True
+      Component = Timer1
+      ComponentProperty = 'Enabled'
+    end
+  end
+end

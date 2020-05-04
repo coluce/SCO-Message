@@ -1,0 +1,129 @@
+object ServerPrincipal: TServerPrincipal
+  Left = 0
+  Top = 0
+  Caption = 'Server'
+  ClientHeight = 480
+  ClientWidth = 640
+  FormFactor.Width = 320
+  FormFactor.Height = 480
+  FormFactor.Devices = [Desktop]
+  OnCreate = FormCreate
+  DesignerMasterStyle = 0
+  object Memo1: TMemo
+    Touch.InteractiveGestures = [Pan, LongTap, DoubleTap]
+    DataDetectorTypes = []
+    Margins.Left = 5.000000000000000000
+    Margins.Top = 5.000000000000000000
+    Margins.Right = 5.000000000000000000
+    Margins.Bottom = 5.000000000000000000
+    Position.X = 5.000000000000000000
+    Position.Y = 88.000000000000000000
+    Size.Width = 630.000000000000000000
+    Size.Height = 387.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 3
+    Viewport.Width = 626.000000000000000000
+    Viewport.Height = 383.000000000000000000
+  end
+  object Timer1: TTimer
+    OnTimer = Timer1Timer
+    Left = 248
+    Top = 72
+  end
+  object GroupBoxRemoteServer: TGroupBox
+    Margins.Left = 5.000000000000000000
+    Margins.Top = 5.000000000000000000
+    Margins.Right = 5.000000000000000000
+    Margins.Bottom = 5.000000000000000000
+    Position.X = 239.000000000000000000
+    Position.Y = 3.000000000000000000
+    Size.Width = 396.000000000000000000
+    Size.Height = 76.000000000000000000
+    Size.PlatformDefault = False
+    Text = 'Remote Sever'
+    TabOrder = 6
+    object EditRemoteAdress: TEdit
+      Touch.InteractiveGestures = [LongTap, DoubleTap]
+      TabOrder = 1
+      Text = '127.0.0.1'
+      Position.X = 16.000000000000000000
+      Position.Y = 40.000000000000000000
+      Size.Width = 169.000000000000000000
+      Size.Height = 22.000000000000000000
+      Size.PlatformDefault = False
+      object LabelAdress: TLabel
+        Position.X = -1.000000000000000000
+        Position.Y = -19.000000000000000000
+        Text = 'Adress'
+        TabOrder = 0
+      end
+    end
+    object EditRemotePort: TEdit
+      Touch.InteractiveGestures = [LongTap, DoubleTap]
+      TabOrder = 0
+      FilterChar = '0123456789'
+      Text = '211'
+      Position.X = 192.000000000000000000
+      Position.Y = 40.000000000000000000
+      Size.Width = 105.000000000000000000
+      Size.Height = 22.000000000000000000
+      Size.PlatformDefault = False
+      object LabelPort: TLabel
+        Position.Y = -18.000000000000000000
+        Text = 'Port'
+        TabOrder = 0
+      end
+    end
+    object SwitchRemote: TSwitch
+      IsChecked = False
+      Position.X = 307.000000000000000000
+      Position.Y = 35.000000000000000000
+      TabOrder = 2
+      OnSwitch = SwitchRemoteSwitch
+    end
+  end
+  object GroupBox1: TGroupBox
+    Position.X = 6.000000000000000000
+    Position.Y = 3.000000000000000000
+    Size.Width = 228.000000000000000000
+    Size.Height = 76.000000000000000000
+    Size.PlatformDefault = False
+    Text = 'Local Server'
+    TabOrder = 7
+    object SwitchLocal: TSwitch
+      IsChecked = False
+      Position.X = 137.000000000000000000
+      Position.Y = 35.000000000000000000
+      TabOrder = 2
+      OnSwitch = SwitchLocalSwitch
+    end
+    object EditLocalPort: TEdit
+      Touch.InteractiveGestures = [LongTap, DoubleTap]
+      TabOrder = 0
+      FilterChar = '0123456789'
+      Text = '211'
+      Position.X = 16.000000000000000000
+      Position.Y = 40.000000000000000000
+      Size.Width = 105.000000000000000000
+      Size.Height = 22.000000000000000000
+      Size.PlatformDefault = False
+      object Label1: TLabel
+        Position.Y = -18.000000000000000000
+        Text = 'Port'
+        TabOrder = 0
+      end
+    end
+  end
+  object MensageriaServidor1: TMensageriaServidor
+    ConectadoRemoto = False
+    ConectadoRemotoStoredUsage = []
+    UserName = 'servidor'
+    Servidor.Address = 'localhost'
+    Servidor.Port = 211
+    OnReceberMensagem = MensageriaServidor1ReceberMensagem
+    Conectado = False
+    Port = 211
+    Left = 128
+    Top = 64
+  end
+end
