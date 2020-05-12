@@ -27,8 +27,8 @@ object ServerPrincipal: TServerPrincipal
   end
   object Timer1: TTimer
     OnTimer = Timer1Timer
-    Left = 248
-    Top = 72
+    Left = 152
+    Top = 104
   end
   object GroupBoxRemoteServer: TGroupBox
     Margins.Left = 5.000000000000000000
@@ -122,7 +122,7 @@ object ServerPrincipal: TServerPrincipal
     OnReceberMensagem = SCOMessageServerReceberMensagem
     Running = False
     Port = 0
-    Left = 128
-    Top = 208
+    Left = 56
+    Top = 104
   end
 end

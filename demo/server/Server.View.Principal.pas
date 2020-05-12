@@ -72,7 +72,7 @@ procedure TServerPrincipal.StartRemoteServer(const aAddress: string;
 begin
   SCOMessageServer.Server.Address := aAddress;
   SCOMessageServer.Server.Port    := aPort;
-  SCOMessageServer.Running := True;
+  SCOMessageServer.Running        := True;
 end;
 
 procedure TServerPrincipal.StopLocalServer;
@@ -114,16 +114,7 @@ begin
 end;
 
 procedure TServerPrincipal.Timer1Timer(Sender: TObject);
-//var
-//  vJSon: TJson;
 begin
-//  vJSon := TJson.Create;
-//  try
-//    vJSon.Parse(MensageriaServidor1.ActiveUsers);
-//    Memo1.Text := vJSon.Stringify;
-//  finally
-//    vJSon.DisposeOf;
-//  end;
   Memo1.Text := SCOMessageServer.ActiveUsers;
 end;
 
