@@ -31,7 +31,7 @@ type
 
   TSCOMessageServer  = class;
 
-  TSCOServerprocessThread = class(TThread)
+  TSCOServerProcessThread = class(TThread)
   private
     FMessageServer : TSCOMessageServer;
     procedure MsgUsuariosOnline(AServidorMensageria : TSCOMessageServer; AMensagem: IMessage);
@@ -49,7 +49,7 @@ type
   private
     { Private declarations }
     FSocketServer: TIdTCPServer;
-    FThreadProcessamento: TSCOServerprocessThread;
+    FThreadProcessamento: TSCOServerProcessThread;
     FRouteController: IRouteController;
     procedure SetRunning(const Value: boolean);
     //procedure RotaOffline(AUsuario, ADispositivo, AIDCliente : string);
@@ -326,7 +326,7 @@ begin
   ThreadProcessamentoDestruir;
   if GetRunning then
   begin
-    FThreadProcessamento := TSCOServerprocessThread.Create(Self);
+    FThreadProcessamento := TSCOServerProcessThread.Create(Self);
   end;
 end;
 
@@ -403,18 +403,18 @@ end;
 
 { TThreadProcessamento }
 
-constructor TSCOServerprocessThread.Create(AServer: TSCOMessageServer);
+constructor TSCOServerProcessThread.Create(AServer: TSCOMessageServer);
 begin
   inherited Create(False);
   FMessageServer  := AServer;
 end;
 
-destructor TSCOServerprocessThread.Destroy;
+destructor TSCOServerProcessThread.Destroy;
 begin
   inherited;
 end;
 
-procedure TSCOServerprocessThread.Execute;
+procedure TSCOServerProcessThread.Execute;
 var
   xMsgInterna: IMessage;
 begin
@@ -463,7 +463,7 @@ begin
   end;
 end;
 
-procedure TSCOServerprocessThread.MsgStatus(pMessage: IMessage);
+procedure TSCOServerProcessThread.MsgStatus(pMessage: IMessage);
 begin
   {Mensagem informando que o Client não esta mais Online}
   if pMessage.Params.ContainsKey('status.offline') then
@@ -479,7 +479,7 @@ begin
   end;
 end;
 
-procedure TSCOServerprocessThread.MsgSubir(pMessage: IMessage);
+procedure TSCOServerProcessThread.MsgSubir(pMessage: IMessage);
 begin
   if not SameStr(pMessage.Destiny.Trim, FMessageServer.UserName.Trim) then
   begin
@@ -487,7 +487,7 @@ begin
   end;
 end;
 
-procedure TSCOServerprocessThread.MsgUsuariosOnline(AServidorMensageria : TSCOMessageServer; AMensagem: IMessage);
+procedure TSCOServerProcessThread.MsgUsuariosOnline(AServidorMensageria : TSCOMessageServer; AMensagem: IMessage);
 var
   xMsg: IMessage;
 begin
