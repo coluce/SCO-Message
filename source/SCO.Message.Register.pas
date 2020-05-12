@@ -18,8 +18,8 @@ begin
   RegisterComponents(
     'SCO Message',
     [
-      TMensageriaCliente,
-      TMensageriaServidor
+      TSCOMessageClient,
+      TSCOMessageServer
     ]
   );
 end;

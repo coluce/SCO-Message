@@ -1,0 +1,48 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{A1F21C6C-51C6-4AF8-8CEC-C75326D11CBA}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="SCOMessageD103RTL.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="SCOMessageD103.dproj">
+            <Dependencies/>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="SCOMessageD103RTL">
+        <MSBuild Projects="SCOMessageD103RTL.dproj"/>
+    </Target>
+    <Target Name="SCOMessageD103RTL:Clean">
+        <MSBuild Projects="SCOMessageD103RTL.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="SCOMessageD103RTL:Make">
+        <MSBuild Projects="SCOMessageD103RTL.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="SCOMessageD103">
+        <MSBuild Projects="SCOMessageD103.dproj"/>
+    </Target>
+    <Target Name="SCOMessageD103:Clean">
+        <MSBuild Projects="SCOMessageD103.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="SCOMessageD103:Make">
+        <MSBuild Projects="SCOMessageD103.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="SCOMessageD103RTL;SCOMessageD103"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="SCOMessageD103RTL:Clean;SCOMessageD103:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="SCOMessageD103RTL:Make;SCOMessageD103:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+</Project>

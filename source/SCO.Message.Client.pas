@@ -14,15 +14,15 @@ uses
 
 type
 
-  TThreadProcessamentoCliente = class;
-  TMensageriaCliente          = class;
+  TSCOClientProcessThread = class;
+  TSCOMessageClient          = class;
 
   { TSCOListenerSendThread }
   TSCOListenerSendThread = class(TThread)
   private
     { Private declarations }
     FException: Exception;
-    FListener: ISCOMensageriaListener;
+    FListener: ISCOMessageListener;
     FMensagem: IMessage;
     procedure DoHandleException;
   protected
@@ -31,27 +31,27 @@ type
     procedure HandleException; virtual;
   public
     { Public declarations }
-    constructor Create(const AListener : ISCOMensageriaListener; const AMensagem: IMessage); reintroduce;
-    property Listener : ISCOMensageriaListener read FListener;
+    constructor Create(const AListener : ISCOMessageListener; const AMensagem: IMessage); reintroduce;
+    property Listener : ISCOMessageListener read FListener;
     property Mensagem : IMessage read FMensagem;
   end;
 
-  TThreadProcessamentoCliente = class(TThread)
+  TSCOClientProcessThread = class(TThread)
   private
-    FMessageClient: TMensageriaCliente;
-    procedure MsgStatus(AClienteMensageria : TMensageriaCliente; AMensagem: IMessage);
+    FMessageClient: TSCOMessageClient;
+    procedure MsgStatus(AClienteMensageria : TSCOMessageClient; AMensagem: IMessage);
   protected
     procedure Execute; override;
   public
     { Public declarations }
-    constructor Create(AClienteMensageria : TMensageriaCliente); reintroduce;
+    constructor Create(AClienteMensageria : TSCOMessageClient); reintroduce;
     destructor  Destroy; override;
   end;
 
-  TMensageriaCliente = class(TMensageriaBase)
+  TSCOMessageClient = class(TSCOMessageCommon)
   private
-    FMensagemProcessamento : TThreadProcessamentoCliente;
-    FListeners             : TList<ISCOMensageriaListener>;
+    FMensagemProcessamento : TSCOClientProcessThread;
+    FListeners             : TList<ISCOMessageListener>;
     procedure DestruirThreadMonitora;
     procedure CriarThreadMonitora;
     { Private declarations }
@@ -68,8 +68,8 @@ type
 
     procedure   VerificarOnline(ADestinatario : string);
     procedure   RequestActiveUsers;
-    procedure   RegisterListener(const AListener: ISCOMensageriaListener);
-    procedure   UnregisterListener(const AListener: ISCOMensageriaListener);
+    procedure   RegisterListener(const AListener: ISCOMessageListener);
+    procedure   UnregisterListener(const AListener: ISCOMessageListener);
 
     procedure   Open; override;
     procedure   Close; override;
@@ -79,24 +79,24 @@ implementation
 
 { TMensageriaCliente }
 
-procedure TMensageriaCliente.Close;
+procedure TSCOMessageClient.Close;
 begin
   Self.ConectadoRemoto := False;
 end;
 
-procedure TMensageriaCliente.CriarThreadMonitora;
+procedure TSCOMessageClient.CriarThreadMonitora;
 begin
   DestruirThreadMonitora;
-  FMensagemProcessamento := TThreadProcessamentoCliente.Create(Self);
+  FMensagemProcessamento := TSCOClientProcessThread.Create(Self);
 end;
 
-constructor TMensageriaCliente.Create(AOwner: TComponent);
+constructor TSCOMessageClient.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
-  FListeners := TList<ISCOMensageriaListener>.Create;
+  FListeners := TList<ISCOMessageListener>.Create;
 end;
 
-destructor TMensageriaCliente.Destroy;
+destructor TSCOMessageClient.Destroy;
 begin
   DestruirThreadMonitora;
   FListeners.DisposeOf;
@@ -104,12 +104,12 @@ begin
   inherited;
 end;
 
-procedure TMensageriaCliente.Open;
+procedure TSCOMessageClient.Open;
 begin
   Self.ConectadoRemoto := True;
 end;
 
-procedure TMensageriaCliente.RegisterListener(const AListener: ISCOMensageriaListener);
+procedure TSCOMessageClient.RegisterListener(const AListener: ISCOMessageListener);
 begin
   if not FListeners.Contains(AListener) then
   begin
@@ -118,7 +118,7 @@ begin
   end;
 end;
 
-procedure TMensageriaCliente.RequestActiveUsers;
+procedure TSCOMessageClient.RequestActiveUsers;
 var
   xMsg: IMessage;
 begin
@@ -128,7 +128,7 @@ begin
   EnviarMensagem(xMsg);
 end;
 
-procedure TMensageriaCliente.SendToServer(AMensagem: IMessage);
+procedure TSCOMessageClient.SendToServer(AMensagem: IMessage);
 begin
   try
     if AMensagem.UserName.Trim.IsEmpty then
@@ -136,12 +136,12 @@ begin
       AMensagem.UserName := Self.UserName;
     end;
     {Subir a mensagem}
-    Servidor.QueueMessage(AMensagem.ToText);
+    Server.QueueMessage(AMensagem.ToText);
   except
   end;
 end;
 
-procedure TMensageriaCliente.UnregisterListener(const AListener: ISCOMensageriaListener);
+procedure TSCOMessageClient.UnregisterListener(const AListener: ISCOMessageListener);
 begin
   if FListeners.Contains(AListener) then
   begin
@@ -150,7 +150,7 @@ begin
   end;
 end;
 
-procedure TMensageriaCliente.VerificarOnline(ADestinatario: string);
+procedure TSCOMessageClient.VerificarOnline(ADestinatario: string);
 var
   xMsg: IMessage;
 begin
@@ -160,7 +160,7 @@ begin
   EnviarMensagem(xMsg);
 end;
 
-procedure TMensageriaCliente.DestruirThreadMonitora;
+procedure TSCOMessageClient.DestruirThreadMonitora;
 begin
   if Assigned(FMensagemProcessamento) then
   begin
@@ -177,41 +177,41 @@ begin
   end;
 end;
 
-procedure TMensageriaCliente.DoAfterConectar;
+procedure TSCOMessageClient.DoAfterConectar;
 begin
   inherited;
   CriarThreadMonitora;
 end;
 
-procedure TMensageriaCliente.DoAfterDesconectar;
+procedure TSCOMessageClient.DoAfterDesconectar;
 begin
   inherited;
   DestruirThreadMonitora;
 end;
 
-procedure TMensageriaCliente.EnviarMensagem(AMensagem: IMessage);
+procedure TSCOMessageClient.EnviarMensagem(AMensagem: IMessage);
 begin
   Self.SendToServer(AMensagem);
 end;
 
 { TMensagemProcessamentoCliente }
 
-constructor TThreadProcessamentoCliente.Create(
-  AClienteMensageria: TMensageriaCliente);
+constructor TSCOClientProcessThread.Create(
+  AClienteMensageria: TSCOMessageClient);
 begin
   inherited Create(False);
   FMessageClient := AClienteMensageria;
 end;
 
-destructor TThreadProcessamentoCliente.Destroy;
+destructor TSCOClientProcessThread.Destroy;
 begin
   inherited;
 end;
 
-procedure TThreadProcessamentoCliente.Execute;
+procedure TSCOClientProcessThread.Execute;
 var
   xMensagem : IMessage;
-  xListener : ISCOMensageriaListener;
+  xListener : ISCOMessageListener;
 begin
   inherited;
   while not Self.Terminated do
@@ -255,7 +255,7 @@ begin
   end;
 end;
 
-procedure TThreadProcessamentoCliente.MsgStatus(AClienteMensageria: TMensageriaCliente; AMensagem: IMessage);
+procedure TSCOClientProcessThread.MsgStatus(AClienteMensageria: TSCOMessageClient; AMensagem: IMessage);
 begin
   if AMensagem.Params.ContainsKey('status.verificacao') then
   begin
@@ -268,7 +268,7 @@ end;
 
 { TSCOListenerSendThread }
 
-constructor TSCOListenerSendThread.Create(const AListener: ISCOMensageriaListener; const AMensagem: IMessage);
+constructor TSCOListenerSendThread.Create(const AListener: ISCOMessageListener; const AMensagem: IMessage);
 begin
   inherited Create(False);
   FreeOnTerminate := True;

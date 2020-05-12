@@ -29,36 +29,36 @@ uses
 
 type
 
-  TMensageriaServidor  = class;
+  TSCOMessageServer  = class;
 
-  TThreadProcessamentoServidor = class(TThread)
+  TSCOServerprocessThread = class(TThread)
   private
-    FMessageServer : TMensageriaServidor;
-    procedure MsgUsuariosOnline(AServidorMensageria : TMensageriaServidor; AMensagem: IMessage);
+    FMessageServer : TSCOMessageServer;
+    procedure MsgUsuariosOnline(AServidorMensageria : TSCOMessageServer; AMensagem: IMessage);
     procedure MsgStatus(pMessage: IMessage);
     procedure MsgSubir(pMessage: IMessage);
   protected
     procedure Execute; override;
   public
     { Public declarations }
-    constructor Create(AServer: TMensageriaServidor); reintroduce;
+    constructor Create(AServer: TSCOMessageServer); reintroduce;
     destructor  Destroy; override;
   end;
 
-  TMensageriaServidor = class(TMensageriaBase)
+  TSCOMessageServer = class(TSCOMessageCommon)
   private
     { Private declarations }
     FSocketServer: TIdTCPServer;
-    FThreadProcessamento: TThreadProcessamentoServidor;
+    FThreadProcessamento: TSCOServerprocessThread;
     FRouteController: IRouteController;
     procedure SetRunning(const Value: boolean);
-    procedure RotaOffline(AUsuario, ADispositivo, AIDCliente : string);
+    //procedure RotaOffline(AUsuario, ADispositivo, AIDCliente : string);
     function  GetRunning: boolean;
     procedure ThreadProcessamentoDestruir;
     procedure CriarThreadProcessamento;
     procedure DoOnServerExecute(AContext: TIdContext);
     procedure DoOnDisconnect(AContext: TIdContext);
-    procedure DesconectarCliente(AIDCliente: string);
+    //procedure DesconectarCliente(AIDCliente: string);
     function GetPort: Word;
     procedure SetPort(const Value: Word);
   protected
@@ -76,7 +76,7 @@ type
     procedure   Close; override;
 
     function    ActiveUsers : string;
-    function    CloseExternalConnections : integer;
+//    function    CloseExternalConnections : integer;
   published
     { Published declarations }
     property Running: Boolean read GetRunning write SetRunning;
@@ -92,13 +92,13 @@ uses
 
 { TMensageriaServidor }
 
-procedure TMensageriaServidor.Close;
+procedure TSCOMessageServer.Close;
 begin
   inherited;
   Self.Running := False;
 end;
 
-constructor TMensageriaServidor.Create(AOwner: TComponent);
+constructor TSCOMessageServer.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
 
@@ -110,7 +110,7 @@ begin
   FRouteController := TRouteControllerFacory.New;
 end;
 
-destructor TMensageriaServidor.Destroy;
+destructor TSCOMessageServer.Destroy;
 begin
   ThreadProcessamentoDestruir;
 
@@ -128,23 +128,23 @@ begin
   inherited;
 end;
 
-procedure TMensageriaServidor.DoAfterConectar;
+procedure TSCOMessageServer.DoAfterConectar;
 begin
 
 end;
 
-procedure TMensageriaServidor.DoAfterDesconectar;
+procedure TSCOMessageServer.DoAfterDesconectar;
 begin
   inherited;
 
 end;
 
-procedure TMensageriaServidor.DoOnDisconnect(AContext: TIdContext);
+procedure TSCOMessageServer.DoOnDisconnect(AContext: TIdContext);
 begin
   FRouteController.UnregisterRoute(AContext);
 end;
 
-procedure TMensageriaServidor.DoOnServerExecute(AContext: TIdContext);
+procedure TSCOMessageServer.DoOnServerExecute(AContext: TIdContext);
   procedure RedirectMessage(const AMessage: IMessage);
   var
     xRota: IRoute;
@@ -185,13 +185,13 @@ begin
   end;
 end;
 
-function TMensageriaServidor.CloseExternalConnections : integer;
-var
-   i               : integer;
-   xContextsList   : TList;
-   xCurrentContext : TIdContext;
-begin
-  Result := 0;
+//function TSCOMessageServer.CloseExternalConnections : integer;
+//var
+//   i               : integer;
+//   xContextsList   : TList;
+//   xCurrentContext : TIdContext;
+//begin
+//  Result := 0;
 //  try
 //    xContextsList := FSocketServer.Contexts.LockList;
 //    try
@@ -211,15 +211,15 @@ begin
 //  except
 //
 //  end;
-end;
+//end;
 
-procedure TMensageriaServidor.RotaOffline(AUsuario, ADispositivo, AIDCliente: string);
-begin
-  {deletar a rota da minha lista de rotas}
-  FRouteController.UnregisterRoute(AUsuario);
-end;
+//procedure TSCOMessageServer.RotaOffline(AUsuario, ADispositivo, AIDCliente: string);
+//begin
+//  {deletar a rota da minha lista de rotas}
+//  FRouteController.UnregisterRoute(AUsuario);
+//end;
 
-function TMensageriaServidor.ActiveUsers: string;
+function TSCOMessageServer.ActiveUsers: string;
   function InsertUsers(ARoute: IRoute): string;
   var
     vJson: TStrings;
@@ -277,11 +277,11 @@ begin
   end;
 end;
 
-procedure TMensageriaServidor.SendToServer(AMensagem: IMessage);
+procedure TSCOMessageServer.SendToServer(AMensagem: IMessage);
 var
   xMessageStr: string;
 begin
-  if Self.Servidor.IsConnected then
+  if Self.Server.IsConnected then
   begin
     try
       if AMensagem.UserName.Trim.IsEmpty then
@@ -296,7 +296,7 @@ begin
   end;
 end;
 
-procedure TMensageriaServidor.SetRunning(const Value: boolean);
+procedure TSCOMessageServer.SetRunning(const Value: boolean);
 begin
   if csDesigning in Self.ComponentState then
   begin
@@ -316,21 +316,21 @@ begin
   CriarThreadProcessamento;
 end;
 
-procedure TMensageriaServidor.SetPort(const Value: Word);
+procedure TSCOMessageServer.SetPort(const Value: Word);
 begin
   FSocketServer.DefaultPort := Value;
 end;
 
-procedure TMensageriaServidor.CriarThreadProcessamento;
+procedure TSCOMessageServer.CriarThreadProcessamento;
 begin
   ThreadProcessamentoDestruir;
   if GetRunning then
   begin
-    FThreadProcessamento := TThreadProcessamentoServidor.Create(Self);
+    FThreadProcessamento := TSCOServerprocessThread.Create(Self);
   end;
 end;
 
-procedure TMensageriaServidor.ThreadProcessamentoDestruir;
+procedure TSCOMessageServer.ThreadProcessamentoDestruir;
 begin
   if Assigned(FThreadProcessamento) then
   begin
@@ -344,29 +344,29 @@ begin
   end;
 end;
 
-procedure TMensageriaServidor.DesconectarCliente(AIDCliente: string);
-var
-  xContextsList: TList;
-  i: Integer;
-  xCurrentContext: TIdContext;
-begin
-  xContextsList := FSocketServer.Contexts.LockList;
-  try
-    for i := 0 to Pred(xContextsList.Count) do
-    begin
-      xCurrentContext := TIdContext(xContextsList.Items[i]);
-      if xCurrentContext.Connection.IOHandler.GetHashCode.ToString = AIDCliente then
-      begin
-        xCurrentContext.Connection.IOHandler.Close;
-        Break;
-      end;
-    end;
-  finally
-    FSocketServer.Contexts.UnlockList;
-  end;
-end;
+//procedure TSCOMessageServer.DesconectarCliente(AIDCliente: string);
+//var
+//  xContextsList: TList;
+//  i: Integer;
+//  xCurrentContext: TIdContext;
+//begin
+//  xContextsList := FSocketServer.Contexts.LockList;
+//  try
+//    for i := 0 to Pred(xContextsList.Count) do
+//    begin
+//      xCurrentContext := TIdContext(xContextsList.Items[i]);
+//      if xCurrentContext.Connection.IOHandler.GetHashCode.ToString = AIDCliente then
+//      begin
+//        xCurrentContext.Connection.IOHandler.Close;
+//        Break;
+//      end;
+//    end;
+//  finally
+//    FSocketServer.Contexts.UnlockList;
+//  end;
+//end;
 
-procedure TMensageriaServidor.EnviarMensagem(AMensagem: IMessage);
+procedure TSCOMessageServer.EnviarMensagem(AMensagem: IMessage);
 begin
   // procurar rotas
   if not FRouteController.QueueMessage(AMensagem) then
@@ -376,7 +376,7 @@ begin
   end;
 end;
 
-function TMensageriaServidor.GetRunning: boolean;
+function TSCOMessageServer.GetRunning: boolean;
 begin
   try
     Result := FSocketServer.Active;
@@ -385,17 +385,17 @@ begin
   end;
 end;
 
-function TMensageriaServidor.GetPort: Word;
+function TSCOMessageServer.GetPort: Word;
 begin
   Result := FSocketServer.DefaultPort;
 end;
 
-procedure TMensageriaServidor.Notification(AComponent: TComponent; Operation: TOperation);
+procedure TSCOMessageServer.Notification(AComponent: TComponent; Operation: TOperation);
 begin
   inherited;
 end;
 
-procedure TMensageriaServidor.Open;
+procedure TSCOMessageServer.Open;
 begin
   inherited;
   Self.Running := True;
@@ -403,18 +403,18 @@ end;
 
 { TThreadProcessamento }
 
-constructor TThreadProcessamentoServidor.Create(AServer: TMensageriaServidor);
+constructor TSCOServerprocessThread.Create(AServer: TSCOMessageServer);
 begin
   inherited Create(False);
   FMessageServer  := AServer;
 end;
 
-destructor TThreadProcessamentoServidor.Destroy;
+destructor TSCOServerprocessThread.Destroy;
 begin
   inherited;
 end;
 
-procedure TThreadProcessamentoServidor.Execute;
+procedure TSCOServerprocessThread.Execute;
 var
   xMsgInterna: IMessage;
 begin
@@ -463,7 +463,7 @@ begin
   end;
 end;
 
-procedure TThreadProcessamentoServidor.MsgStatus(pMessage: IMessage);
+procedure TSCOServerprocessThread.MsgStatus(pMessage: IMessage);
 begin
   {Mensagem informando que o Client não esta mais Online}
   if pMessage.Params.ContainsKey('status.offline') then
@@ -479,7 +479,7 @@ begin
   end;
 end;
 
-procedure TThreadProcessamentoServidor.MsgSubir(pMessage: IMessage);
+procedure TSCOServerprocessThread.MsgSubir(pMessage: IMessage);
 begin
   if not SameStr(pMessage.Destiny.Trim, FMessageServer.UserName.Trim) then
   begin
@@ -487,7 +487,7 @@ begin
   end;
 end;
 
-procedure TThreadProcessamentoServidor.MsgUsuariosOnline(AServidorMensageria : TMensageriaServidor; AMensagem: IMessage);
+procedure TSCOServerprocessThread.MsgUsuariosOnline(AServidorMensageria : TSCOMessageServer; AMensagem: IMessage);
 var
   xMsg: IMessage;
 begin

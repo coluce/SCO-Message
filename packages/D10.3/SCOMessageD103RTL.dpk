@@ -1,4 +1,4 @@
-package SCOMessageRTL;
+package SCOMessageD103RTL;
 
 {$R *.res}
 {$IFDEF IMPLICITBUILDING This IFDEF should not be used by users}
@@ -25,6 +25,7 @@ package SCOMessageRTL;
 {$IMAGEBASE $400000}
 {$DEFINE DEBUG}
 {$ENDIF IMPLICITBUILDING}
+{$DESCRIPTION 'SCO Message RTL'}
 {$RUNONLY}
 {$IMPLICITBUILD ON}
 
@@ -46,15 +47,15 @@ requires
   IndyIPClient;
 
 contains
-  SCO.Message.Functions in 'SCO.Message.Functions.pas',
-  SCO.Message.Base in 'SCO.Message.Base.pas',
-  SCO.Message.Zip in 'SCO.Message.Zip.pas',
-  SCO.Message.Client in 'SCO.Message.Client.pas',
-  SCO.Message.Server in 'SCO.Message.Server.pas',
-  SCO.Message.Interfaces in 'SCO.Message.Interfaces.pas',
-  SCO.Message.Route.Controller in 'SCO.Message.Route.Controller.pas',
-  SCO.Message.Route in 'SCO.Message.Route.pas',
-  SCO.Message.Imp in 'SCO.Message.Imp.pas';
+  SCO.Message.Functions in '..\..\source\SCO.Message.Functions.pas',
+  SCO.Message.Zip in '..\..\source\SCO.Message.Zip.pas',
+  SCO.Message.Client in '..\..\source\SCO.Message.Client.pas',
+  SCO.Message.Server in '..\..\source\SCO.Message.Server.pas',
+  SCO.Message.Interfaces in '..\..\source\SCO.Message.Interfaces.pas',
+  SCO.Message.Route.Controller in '..\..\source\SCO.Message.Route.Controller.pas',
+  SCO.Message.Route in '..\..\source\SCO.Message.Route.pas',
+  SCO.Message.Imp in '..\..\source\SCO.Message.Imp.pas',
+  SCO.Message.Base in '..\..\source\SCO.Message.Base.pas';
 
 end.
 

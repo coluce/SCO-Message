@@ -1,7 +1,7 @@
 ﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     <PropertyGroup>
-        <ProjectGuid>{D033E6BC-6809-4F91-BF66-64026C0666F1}</ProjectGuid>
-        <MainSource>SCOMessageRTL.dpk</MainSource>
+        <ProjectGuid>{FDE0CE09-2DCD-40CE-A851-441B9432502A}</ProjectGuid>
+        <MainSource>SCOMessage.dpk</MainSource>
         <ProjectVersion>18.8</ProjectVersion>
         <FrameworkType>None</FrameworkType>
         <Base>True</Base>
@@ -40,12 +40,12 @@
         <Base>true</Base>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base)'!=''">
-        <RuntimeOnlyPackage>true</RuntimeOnlyPackage>
-        <SanitizedProjectName>SCOMessageRTL</SanitizedProjectName>
-        <DCC_Namespace>System;Xml;Data;Datasnap;Web;Soap;$(DCC_Namespace)</DCC_Namespace>
         <DCC_CBuilderOutput>All</DCC_CBuilderOutput>
-        <GenPackage>true</GenPackage>
+        <DesignOnlyPackage>true</DesignOnlyPackage>
+        <SanitizedProjectName>SCOMessage</SanitizedProjectName>
+        <DCC_Namespace>System;Xml;Data;Datasnap;Web;Soap;$(DCC_Namespace)</DCC_Namespace>
         <GenDll>true</GenDll>
+        <GenPackage>true</GenPackage>
         <DCC_DcuOutput>.\$(Platform)\$(Config)</DCC_DcuOutput>
         <DCC_ExeOutput>.\$(Platform)\$(Config)</DCC_ExeOutput>
         <DCC_E>false</DCC_E>
@@ -55,14 +55,15 @@
         <DCC_K>false</DCC_K>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win32)'!=''">
-        <VerInfo_Locale>1033</VerInfo_Locale>
-        <DCC_UsePackage>rtl;DbxCommonDriver;dbrtl;DataSnapCommon;DbxClientDriver;CustomIPTransport;dbexpress;$(DCC_UsePackage)</DCC_UsePackage>
+        <DCC_UsePackage>rtl;DbxCommonDriver;dbrtl;CustomIPTransport;soaprtl;IndyIPCommon;IndySystem;IndyProtocols;IndyCore;IndyIPClient;FireDAC;FireDACCommonDriver;FireDACCommon;dbexpress;$(DCC_UsePackage)</DCC_UsePackage>
         <DCC_Namespace>Winapi;System.Win;Data.Win;Datasnap.Win;Web.Win;Soap.Win;Xml.Win;Bde;$(DCC_Namespace)</DCC_Namespace>
+        <VerInfo_Locale>1033</VerInfo_Locale>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
-        <VerInfo_Keys>CompanyName=;FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductVersion=1.0.0.0;Comments=;ProgramID=com.embarcadero.$(ModuleName);FileDescription=$(ModuleName);ProductName=$(ModuleName)</VerInfo_Keys>
+        <VerInfo_Keys>CompanyName=;FileDescription=$(MSBuildProjectName);FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProgramID=com.embarcadero.$(MSBuildProjectName);ProductName=$(MSBuildProjectName);ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
+        <BT_BuildType>Debug</BT_BuildType>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win64)'!=''">
-        <DCC_UsePackage>rtl;DbxCommonDriver;dbrtl;DataSnapCommon;DbxClientDriver;CustomIPTransport;dbexpress;$(DCC_UsePackage)</DCC_UsePackage>
+        <DCC_UsePackage>rtl;DbxCommonDriver;dbrtl;CustomIPTransport;soaprtl;IndyIPCommon;IndySystem;IndyProtocols;IndyCore;IndyIPClient;FireDAC;FireDACCommonDriver;FireDACCommon;dbexpress;$(DCC_UsePackage)</DCC_UsePackage>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1)'!=''">
         <DCC_Define>DEBUG;$(DCC_Define)</DCC_Define>
@@ -73,9 +74,6 @@
         <DCC_RemoteDebug>true</DCC_RemoteDebug>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
-        <VerInfo_Keys>CompanyName=;FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductVersion=1.0.0.0;Comments=;ProgramID=com.embarcadero.$(MSBuildProjectName);FileDescription=$(MSBuildProjectName);ProductName=$(MSBuildProjectName)</VerInfo_Keys>
-        <DCC_DebugInformation>1</DCC_DebugInformation>
-        <DCC_MapFile>3</DCC_MapFile>
         <VerInfo_Locale>1033</VerInfo_Locale>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <DCC_RemoteDebug>false</DCC_RemoteDebug>
@@ -91,29 +89,21 @@
             <MainSource>MainSource</MainSource>
         </DelphiCompile>
         <DCCReference Include="rtl.dcp"/>
+        <DCCReference Include="DbxCommonDriver.dcp"/>
         <DCCReference Include="dbrtl.dcp"/>
         <DCCReference Include="CustomIPTransport.dcp"/>
-        <DCCReference Include="dbexpress.dcp"/>
+        <DCCReference Include="soaprtl.dcp"/>
+        <DCCReference Include="IndyIPCommon.dcp"/>
+        <DCCReference Include="IndySystem.dcp"/>
+        <DCCReference Include="IndyProtocols.dcp"/>
+        <DCCReference Include="IndyCore.dcp"/>
+        <DCCReference Include="IndyIPClient.dcp"/>
         <DCCReference Include="FireDAC.dcp"/>
         <DCCReference Include="FireDACCommonDriver.dcp"/>
         <DCCReference Include="FireDACCommon.dcp"/>
-        <DCCReference Include="soaprtl.dcp"/>
-        <DCCReference Include="fmx.dcp"/>
-        <DCCReference Include="vcl.dcp"/>
-        <DCCReference Include="IndySystem.dcp"/>
-        <DCCReference Include="IndyCore.dcp"/>
-        <DCCReference Include="IndyProtocols.dcp"/>
-        <DCCReference Include="IndyIPCommon.dcp"/>
-        <DCCReference Include="IndyIPClient.dcp"/>
-        <DCCReference Include="SCO.Message.Functions.pas"/>
-        <DCCReference Include="SCO.Message.Base.pas"/>
-        <DCCReference Include="SCO.Message.Zip.pas"/>
-        <DCCReference Include="SCO.Message.Client.pas"/>
-        <DCCReference Include="SCO.Message.Server.pas"/>
-        <DCCReference Include="SCO.Message.Interfaces.pas"/>
-        <DCCReference Include="SCO.Message.Route.Controller.pas"/>
-        <DCCReference Include="SCO.Message.Route.pas"/>
-        <DCCReference Include="SCO.Message.Imp.pas"/>
+        <DCCReference Include="dbexpress.dcp"/>
+        <DCCReference Include="SCOMessageRTL.dcp"/>
+        <DCCReference Include="SCO.Message.Register.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
@@ -136,12 +126,18 @@
                     <Excluded_Packages Name="$(BDSBIN)\dclofficexp240.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
                 </Excluded_Packages>
                 <Source>
-                    <Source Name="MainSource">SCOMessageRTL.dpk</Source>
+                    <Source Name="MainSource">SCOMessage.dpk</Source>
                 </Source>
             </Delphi.Personality>
             <Deployment Version="3">
                 <DeployFile LocalName="$(BDS)\Redist\osx32\libcgunwind.1.0.dylib" Class="DependencyModule">
                     <Platform Name="OSX32">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="C:\Users\Public\Documents\Embarcadero\Studio\20.0\Bpl\SCOMessage.bpl" Configuration="Debug" Class="ProjectOutput">
+                    <Platform Name="Win32">
+                        <RemoteName>SCOMessage.bpl</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -167,12 +163,6 @@
                 </DeployFile>
                 <DeployFile LocalName="$(BDS)\Redist\osx32\libcgsqlite3.dylib" Class="DependencyModule">
                     <Platform Name="OSX32">
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="C:\Users\Public\Documents\Embarcadero\Studio\20.0\Bpl\SCOMessageRTL.bpl" Configuration="Debug" Class="ProjectOutput">
-                    <Platform Name="Win32">
-                        <RemoteName>SCOMessageRTL.bpl</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -236,7 +226,6 @@
                         <Operation>1</Operation>
                     </Platform>
                 </DeployClass>
-                <DeployClass Name="AndroidLibnativeX86File"/>
                 <DeployClass Name="AndroidServiceOutput">
                     <Platform Name="Android">
                         <RemoteDir>library\lib\armeabi-v7a</RemoteDir>
@@ -869,7 +858,6 @@
                         <Operation>1</Operation>
                     </Platform>
                 </DeployClass>
-                <DeployClass Name="ProjectiOSDeviceInfoPList"/>
                 <DeployClass Name="ProjectiOSDeviceResourceRules"/>
                 <DeployClass Name="ProjectiOSEntitlements"/>
                 <DeployClass Name="ProjectiOSInfoPList"/>
@@ -884,7 +872,6 @@
                         <Operation>1</Operation>
                     </Platform>
                 </DeployClass>
-                <DeployClass Name="ProjectiOSSimulatorInfoPList"/>
                 <DeployClass Name="ProjectOSXDebug"/>
                 <DeployClass Name="ProjectOSXEntitlements"/>
                 <DeployClass Name="ProjectOSXInfoPList"/>
@@ -966,9 +953,8 @@
                 <ProjectRoot Platform="iOSDevice64" Name="$(PROJECTNAME).app"/>
                 <ProjectRoot Platform="Win64" Name="$(PROJECTNAME)"/>
                 <ProjectRoot Platform="iOSDevice32" Name="$(PROJECTNAME).app"/>
-                <ProjectRoot Platform="iOSDevice" Name="$(PROJECTNAME).app"/>
-                <ProjectRoot Platform="Win32" Name="$(PROJECTNAME)"/>
                 <ProjectRoot Platform="Linux64" Name="$(PROJECTNAME)"/>
+                <ProjectRoot Platform="Win32" Name="$(PROJECTNAME)"/>
                 <ProjectRoot Platform="OSX32" Name="$(PROJECTNAME)"/>
                 <ProjectRoot Platform="Android" Name="$(PROJECTNAME)"/>
                 <ProjectRoot Platform="OSX64" Name="$(PROJECTNAME)"/>
