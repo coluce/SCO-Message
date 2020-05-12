@@ -114,16 +114,15 @@ object ServerPrincipal: TServerPrincipal
       end
     end
   end
-  object MensageriaServidor1: TMensageriaServidor
+  object SCOMessageServer: TSCOMessageServer
     ConectadoRemoto = False
     ConectadoRemotoStoredUsage = []
-    UserName = 'servidor'
-    Servidor.Address = 'localhost'
-    Servidor.Port = 211
-    OnReceberMensagem = MensageriaServidor1ReceberMensagem
-    Conectado = False
-    Port = 211
+    Server.Address = 'localhost'
+    Server.Port = 0
+    OnReceberMensagem = SCOMessageServerReceberMensagem
+    Running = False
+    Port = 0
     Left = 128
-    Top = 64
+    Top = 208
   end
 end

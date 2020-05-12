@@ -7,6 +7,7 @@ object Form1: TForm1
   FormFactor.Width = 320
   FormFactor.Height = 480
   FormFactor.Devices = [Desktop]
+  OnCreate = FormCreate
   DesignerMasterStyle = 0
   object EditUsuario: TEdit
     Touch.InteractiveGestures = [LongTap, DoubleTap]
@@ -98,18 +99,6 @@ object Form1: TForm1
     Left = 400
     Top = 80
   end
-  object MensageriaCliente1: TMensageriaCliente
-    ConectadoRemoto = False
-    ConectadoRemotoStoredUsage = []
-    Servidor.Address = 'localhost'
-    Servidor.Port = 211
-    OnReconectar = MensageriaCliente1Reconectar
-    OnConectar = MensageriaCliente1Conectar
-    OnDesconectar = MensageriaCliente1Desconectar
-    OnReceberMensagem = MensageriaCliente1ReceberMensagem
-    Left = 328
-    Top = 80
-  end
   object BindingsList1: TBindingsList
     Methods = <>
     OutputConverters = <>
@@ -122,5 +111,13 @@ object Form1: TForm1
       Component = Timer1
       ComponentProperty = 'Enabled'
     end
+  end
+  object SCOMessageClient: TSCOMessageClient
+    ConectadoRemoto = False
+    ConectadoRemotoStoredUsage = []
+    Server.Address = 'localhost'
+    Server.Port = 0
+    Left = 240
+    Top = 168
   end
 end

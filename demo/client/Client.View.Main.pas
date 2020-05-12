@@ -5,15 +5,14 @@ interface
 uses
   System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants,
   FMX.Types, FMX.Controls, FMX.Forms, FMX.Graphics, FMX.Dialogs, FMX.ScrollBox,
-  FMX.Memo, FMX.StdCtrls, FMX.Controls.Presentation, FMX.Edit, Mensageria.Base,
-  Mensageria.Cliente, Mensageria.Interfaces, FMX.ListView.Types,
+  FMX.Memo, FMX.StdCtrls, FMX.Controls.Presentation, FMX.Edit, FMX.ListView.Types,
   FMX.ListView.Appearances, FMX.ListView.Adapters.Base, FMX.ListView,
   Data.Bind.EngExt, Fmx.Bind.DBEngExt, System.Rtti, System.Bindings.Outputs,
-  Fmx.Bind.Editors, Data.Bind.Components;
+  Fmx.Bind.Editors, Data.Bind.Components, SCO.Message.Base, SCO.Message.Client,
+  SCO.Message.Interfaces;
 
 type
   TForm1 = class(TForm)
-    MensageriaCliente1: TMensageriaCliente;
     EditUsuario: TEdit;
     btnSendMessage: TButton;
     edtMessage: TEdit;
@@ -26,15 +25,16 @@ type
     BindingsList1: TBindingsList;
     LinkControlToPropertyEnabled: TLinkControlToProperty;
     Clear: TButton;
+    SCOMessageClient: TSCOMessageClient;
     procedure btnSendMessageClick(Sender: TObject);
     procedure MensageriaCliente1Conectar(Sender: TObject);
     procedure MensageriaCliente1Desconectar(Sender: TObject);
     procedure MensageriaCliente1Reconectar(Sender: TObject);
-    procedure MensageriaCliente1ReceberMensagem(Sender: TObject;
-      AMensagem: IMessage);
+    procedure MensageriaCliente1ReceberMensagem(Sender: TObject; AMensagem: IMessage);
     procedure Button1Click(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
     procedure ClearClick(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
   private
     { Private declarations }
     procedure Add(const AMessage: string);
@@ -63,6 +63,12 @@ begin
   ListView1.Items.Clear;
 end;
 
+procedure TForm1.FormCreate(Sender: TObject);
+begin
+  SCOMessageClient.Server.Address := '127.0.0.1';
+  SCOMessageClient.Server.Port := 211;
+end;
+
 procedure TForm1.btnSendMessageClick(Sender: TObject);
 var
   vMsg: IMessage;
@@ -70,19 +76,19 @@ begin
   vMsg := TMessageFactory.New;
   vMsg.Params.Add('chat',edtMessage.Text);
   vMsg.Destiny := edtDestinatario.Text;
-  MensageriaCliente1.EnviarMensagem(vMsg);
+  SCOMessageClient.EnviarMensagem(vMsg);
 end;
 
 procedure TForm1.Button1Click(Sender: TObject);
 begin
-  if MensageriaCliente1.ConectadoRemoto then
+  if SCOMessageClient.ConectadoRemoto then
   begin
-    MensageriaCliente1.Close;
+    SCOMessageClient.Close;
   end
   else
   begin
-    MensageriaCliente1.UserName := EditUsuario.Text;
-    MensageriaCliente1.Open;
+    SCOMessageClient.UserName := EditUsuario.Text;
+    SCOMessageClient.Open;
   end;
 end;
 
