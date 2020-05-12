@@ -46,7 +46,7 @@ type
     function IsEmpty: boolean;
     function Users: TArray<string>;
     function ID: integer;
-  published
+  //published
     property IP: string read GetIP;
     property CreationDate: TDateTime read GetCreationDate;
     property State: TRouteState read GetState;
@@ -126,6 +126,7 @@ end;
 
 function TRoute.ID: integer;
 begin
+  Result := -1;
   if Assigned(FContext) then
   begin
     if Assigned(FContext.Connection) then

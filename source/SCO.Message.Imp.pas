@@ -32,7 +32,7 @@ type
     destructor Destroy; override;
     procedure FromText(const Value: string);
     function ToText: string;
-  published
+  //published
     property ID: string read GetID write SetID;
     property UserName: string read GetUserName write SetUserName;
     property Destiny: string read GetDestiny write SetDestiny;

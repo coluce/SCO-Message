@@ -76,7 +76,7 @@ type
     constructor Create;
     destructor  Destroy ; override;
     procedure   Enfileirar(AStrMensagem : string);
-  published
+  //published
     property RemoteServer: TSCORemoteServer read FServidorRemoto write FServidorRemoto;
     property TCPClient: TIdTCPClient read FTCPClient write FTCPClient;
   end;
@@ -90,7 +90,7 @@ type
   public
     constructor Create(const ARemoteServer: TSCORemoteServer; const AConnection: TIdTCPClient);
     destructor  Destroy ; override;
-  published
+  //published
     property RemoteServer : TSCORemoteServer read FServidorRemoto;
     property TCPClient      : TIdTCPClient    read FTCPClient;
   end;
@@ -607,7 +607,6 @@ end;
 
 function TSCORemoteServer.IsConnected: Boolean;
 begin
-  Result := False;
   try
     Result := FSocketClient.Connected;
   except
@@ -683,12 +682,12 @@ procedure TSCOSendThread.Execute;
 var
   xString:   string;
   Buf:       TIdBytes;
-  xMsgIndex: integer;
+  //xMsgIndex: integer;
 const
   MsgBuffer: integer = 100;
 begin
   inherited;
-  xMsgIndex := -1;
+  //xMsgIndex := -1;
   while not Terminated do
   begin
     // caso tenha mensagens
@@ -697,7 +696,7 @@ begin
       //pegar a mensagem para enviar
       secSendMessageSession.Enter;
       try
-        xMsgIndex := xMsgIndex + 1;
+        //xMsgIndex := xMsgIndex + 1;
         xString := FListaMensagem[0];
         Delete(FListaMensagem,0,1);
 //        xString := FListaMensagem[xMsgIndex];
@@ -722,7 +721,7 @@ begin
           except on E: exception do
             begin
               sleep(50);
-            end;                                        
+            end;
           end;
         end else begin
           sleep(50);

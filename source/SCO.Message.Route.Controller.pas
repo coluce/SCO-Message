@@ -26,7 +26,7 @@ type
     procedure VerifyInactiveRoutes;
     procedure EmptyRoutes;
     function QueueMessage(const AMessage: IMessage): boolean;
-  published
+  //published
     property Routes: TArray<IRoute> read GetRoutes;
   end;
 
