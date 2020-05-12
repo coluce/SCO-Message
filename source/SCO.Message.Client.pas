@@ -120,12 +120,12 @@ end;
 
 procedure TSCOMessageClient.RequestActiveUsers;
 var
-  xMsg: IMessage;
+  vMsg: IMessage;
 begin
-  xMsg := TMessageFactory.New;
-  xMsg.Destiny := 'servidor';
-  xMsg.Params.Add('usuarios.online',EmptyStr);
-  EnviarMensagem(xMsg);
+  vMsg := TMessageFactory.New;
+  vMsg.Destiny := 'servidor';
+  vMsg.Params.Add('usuarios.online',EmptyStr);
+  EnviarMensagem(vMsg);
 end;
 
 procedure TSCOMessageClient.SendToServer(AMensagem: IMessage);
@@ -152,12 +152,12 @@ end;
 
 procedure TSCOMessageClient.VerificarOnline(ADestinatario: string);
 var
-  xMsg: IMessage;
+  vMsg: IMessage;
 begin
-  xMsg := TMessageFactory.New;
-  xMsg.Destiny := ADestinatario;
-  xMsg.Params.Add('status.verificacao',EmptyStr);
-  EnviarMensagem(xMsg);
+  vMsg := TMessageFactory.New;
+  vMsg.Destiny := ADestinatario;
+  vMsg.Params.Add('status.verificacao',EmptyStr);
+  EnviarMensagem(vMsg);
 end;
 
 procedure TSCOMessageClient.DestruirThreadMonitora;
@@ -210,15 +210,15 @@ end;
 
 procedure TSCOClientProcessThread.Execute;
 var
-  xMensagem : IMessage;
-  xListener : ISCOMessageListener;
+  vMsg : IMessage;
+  vListener : ISCOMessageListener;
 begin
   inherited;
   while not Self.Terminated do
   begin
     try
       if Self.Terminated then Exit;
-      if not FMessageClient.MessageDequeue(xMensagem) then
+      if not FMessageClient.MessageDequeue(vMsg) then
       begin
         if Self.Terminated then Exit;
         // caso não tenha mensagem na pilha, consome 100% do processamento
@@ -231,21 +231,21 @@ begin
         if Self.Terminated then Exit;
 
         // Mensagens de status
-        MsgStatus(FMessageClient,xMensagem);
+        MsgStatus(FMessageClient,vMsg);
 
         if Self.Terminated then Exit;
 
-        FMessageClient.MsgEntregar(xMensagem);
+        FMessageClient.MsgEntregar(vMsg);
 
         if Self.Terminated then Exit;
 
         //Varro os listeners registrados
-        for xListener in FMessageClient.FListeners do
+        for vListener in FMessageClient.FListeners do
         begin
           //Crio thread passando o listener e a mensagem
             //Crio uma thread para que eu possa estourar excessões dentro dos listeners
             //Se programar aqui direto, sem criar thread, a excessão gerada pelo listener é "ocultada" pelo except deste procedimento
-          TSCOListenerSendThread.Create(xListener, xMensagem);
+          TSCOListenerSendThread.Create(vListener, vMsg);
         end;
         Sleep(100);
       end;

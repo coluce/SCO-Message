@@ -30,11 +30,12 @@ type
     procedure MensageriaCliente1Conectar(Sender: TObject);
     procedure MensageriaCliente1Desconectar(Sender: TObject);
     procedure MensageriaCliente1Reconectar(Sender: TObject);
-    procedure MensageriaCliente1ReceberMensagem(Sender: TObject; AMensagem: IMessage);
     procedure Button1Click(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
     procedure ClearClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
+    procedure SCOMessageClientReceberMensagem(Sender: TObject;
+      AMensagem: IMessage);
   private
     { Private declarations }
     procedure Add(const AMessage: string);
@@ -102,7 +103,13 @@ begin
   Add('desconectado');
 end;
 
-procedure TForm1.MensageriaCliente1ReceberMensagem(Sender: TObject; AMensagem: IMessage);
+procedure TForm1.MensageriaCliente1Reconectar(Sender: TObject);
+begin
+  Add('reconectado');
+end;
+
+procedure TForm1.SCOMessageClientReceberMensagem(Sender: TObject;
+  AMensagem: IMessage);
 var
   vChat: string;
 begin
@@ -110,17 +117,10 @@ begin
   begin
     Add(vChat);
   end;
-
   if AMensagem.Params.TryGetValue('usuarios.online.resposta',vChat) then
   begin
     Add(vChat);
   end;
-
-end;
-
-procedure TForm1.MensageriaCliente1Reconectar(Sender: TObject);
-begin
-  Add('reconectado');
 end;
 
 procedure TForm1.Timer1Timer(Sender: TObject);
