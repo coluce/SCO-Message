@@ -71,7 +71,7 @@ type
     { Public declarations }
     constructor Create(AOwner: TComponent); override;
     destructor  Destroy; override;
-    procedure   EnviarMensagem(AMensagem: IMessage); override;
+    procedure   SendMessage(AMensagem: IMessage); override;
     procedure   Open; override;
     procedure   Close; override;
 
@@ -366,7 +366,7 @@ end;
 //  end;
 //end;
 
-procedure TSCOMessageServer.EnviarMensagem(AMensagem: IMessage);
+procedure TSCOMessageServer.SendMessage(AMensagem: IMessage);
 begin
   // procurar rotas
   if not FRouteController.QueueMessage(AMensagem) then
@@ -474,7 +474,7 @@ begin
   begin
     if pMessage.Destiny = FMessageServer.UserName then
     begin
-      FMessageServer.StatusOnline(pMessage.UserName);
+      FMessageServer.SendStatusOnline(pMessage.UserName);
     end;
   end;
 end;
@@ -497,7 +497,7 @@ begin
     xMsg := TMessagefactory.New;
     xMsg.Destiny := AMensagem.UserName;
     xMsg.Params.Add('usuarios.online.resposta', AServidorMensageria.ActiveUsers);
-    AServidorMensageria.EnviarMensagem(xMsg);
+    AServidorMensageria.SendMessage(xMsg);
   end;
 end;
 

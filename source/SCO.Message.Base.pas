@@ -110,14 +110,14 @@ type
     FConectarRemoto   : boolean;
     FUserName: string;
     FSocketClient     : TIdTCPClient;
-    FServidor         : TSCORemoteServer;
+    FServer         : TSCORemoteServer;
     FMessageList      : TArray<IMessage>;
-    FOnReconectar     : TNotifyEvent;
-    FOnConectar       : TNotifyEvent;
-    FOnDesconectar    : TNotifyEvent;
+    FOnReconnect     : TNotifyEvent;
+    FOnConnect       : TNotifyEvent;
+    FOnDisconnect    : TNotifyEvent;
     FThreadEnvio      : TSCOSendThread;
     FThreadReconectar : TSCOReconectThread;
-    FOnReceberMensagem: TOnMessageEvent;
+    FOnReceiveMessage: TOnMessageEvent;
     FConectadoRemotoStoredUsage: TFDStoredActivationUsage;
     procedure DesconectarSocketClient;
     function  GetConectadoRemoto : boolean;
@@ -149,21 +149,21 @@ type
   public
     constructor Create(AOwner : TComponent); override;
     destructor  Destroy; override;
-    procedure   StatusOnline(ADestinatario : string = '');
+    procedure   SendStatusOnline(ADestinatario : string = '');
 
     procedure   Open; virtual; abstract;
     procedure   Close; virtual; abstract;
-    procedure   EnviarMensagem(AMensagem : IMessage); virtual; abstract;
+    procedure   SendMessage(AMensagem : IMessage); virtual; abstract;
   published
-    property ConectadoRemoto : Boolean         read GetConectadoRemoto write SetConectadoRemoto;
-    property ConectadoRemotoStoredUsage : TFDStoredActivationUsage read FConectadoRemotoStoredUsage write FConectadoRemotoStoredUsage default [auDesignTime];
+    property IsRemoteConnected : Boolean         read GetConectadoRemoto write SetConectadoRemoto;
+    property IsRemoteConnectedStoredUsage : TFDStoredActivationUsage read FConectadoRemotoStoredUsage write FConectadoRemotoStoredUsage default [auDesignTime];
     property UserName: string read FUserName write FUserName;
-    property Server          : TSCORemoteServer read FServidor          write FServidor;
+    property Server          : TSCORemoteServer read FServer          write FServer;
   published
-    property OnReconectar      : TNotifyEvent    read FOnReconectar      write FOnReconectar;
-    property OnConectar        : TNotifyEvent    read FOnConectar        write FOnConectar;
-    property OnDesconectar     : TNotifyEvent    read FOnDesconectar     write FOnDesconectar;
-    property OnReceberMensagem : TOnMessageEvent read FOnReceberMensagem write FOnReceberMensagem;
+    property OnReconnect      : TNotifyEvent    read FOnReconnect      write FOnReconnect;
+    property OnConnect        : TNotifyEvent    read FOnConnect        write FOnConnect;
+    property OnDisconnect     : TNotifyEvent    read FOnDisconnect     write FOnDisconnect;
+    property OnReceiveMessage : TOnMessageEvent read FOnReceiveMessage write FOnReceiveMessage;
 
   end;
 
@@ -263,8 +263,8 @@ begin
   FSocketClient.ConnectTimeout := 5000;
 
   {Inicializando Dados do Servidor Remoto}
-  FServidor := TSCORemoteServer.Create(Self, FSocketClient);
-  FServidor.Address := 'localhost';
+  FServer := TSCORemoteServer.Create(Self, FSocketClient);
+  FServer.Address := 'localhost';
 
   SetLength(FMessageList,0);
 
@@ -307,9 +307,9 @@ procedure TSCOMessageCommon.DoOnClientDisconnected(Sender: TObject);
 begin
   //DestruirThreadLeitura;
   //DestruirThreadEnviar;
-  if Assigned(FOnDesconectar) then
+  if Assigned(FOnDisconnect) then
   begin
-    FOnDesconectar(Sender);
+    FOnDisconnect(Sender);
   end;
 end;
 
@@ -337,7 +337,7 @@ function TSCOMessageCommon.IniciarConexaoServidor : Boolean;
   begin
     try
 
-      if FServidor.IsConnected then
+      if FServer.IsConnected then
       begin
         DesconectarSocketClient;
       end;
@@ -349,7 +349,7 @@ function TSCOMessageCommon.IniciarConexaoServidor : Boolean;
 
       FSocketClient.Connect;
 
-      Result := FServidor.IsConnected;
+      Result := FServer.IsConnected;
 
     except
       Result := False;
@@ -359,16 +359,16 @@ begin
   Result := False;
   try
     FConectarRemoto := True;
-    if Conectar(FServidor.Address,FServidor.Port) then
+    if Conectar(FServer.Address,FServer.Port) then
     begin
       DoAfterConectar;
       CriarThreadReconectar;
-      FServidor.CreateThread;
+      FServer.CreateThread;
       CriarThreadEnviar;
-      StatusOnline;
-      if Assigned(FOnConectar) then
+      SendStatusOnline;
+      if Assigned(FOnConnect) then
       begin
-        FOnConectar(Self);
+        FOnConnect(Self);
       end;
       Result := True;
     end;
@@ -386,7 +386,7 @@ end;
 
 function TSCOMessageCommon.GetConectadoRemoto: boolean;
 begin
-  Result := FServidor.IsConnected;
+  Result := FServer.IsConnected;
 end;
 
 function TSCOMessageCommon.HasRemoteServer: boolean;
@@ -429,13 +429,13 @@ procedure TSCOMessageCommon.MsgEntregar(AMensagem : IMessage);
 var
   xMsg : IMessage;
 begin
-  if Assigned(FOnReceberMensagem) then
+  if Assigned(FOnReceiveMessage) then
   begin
     xMsg := AMensagem;
     TThread.Queue(TThread.CurrentThread,
       procedure
       begin
-        FOnReceberMensagem(Self,xMsg);
+        FOnReceiveMessage(Self,xMsg);
       end
     );
   end;
@@ -443,17 +443,17 @@ end;
 
 procedure TSCOMessageCommon.RemoteOpen;
 begin
-  Self.ConectadoRemoto := True;
+  Self.IsRemoteConnected := True;
 end;
 
 procedure TSCOMessageCommon.RemoteClose;
 begin
-  Self.ConectadoRemoto := False;
+  Self.IsRemoteConnected := False;
 end;
 
 function TSCOMessageCommon.QueueMessage(AStrMensagem: string): boolean;
 begin
-  Result := FServidor.QueueMessage(AStrMensagem);
+  Result := FServer.QueueMessage(AStrMensagem);
 end;
 
 procedure TSCOMessageCommon.SetConectadoRemoto(const Value: boolean);
@@ -461,7 +461,7 @@ begin
 
   if (csLoading in Self.ComponentState) then
   begin
-    if FDCheckStoredUsage(Self.ComponentState, Self.ConectadoRemotoStoredUsage) then
+    if FDCheckStoredUsage(Self.ComponentState, Self.IsRemoteConnectedStoredUsage) then
     begin
       FConectarRemoto := Value;
     end;
@@ -473,7 +473,7 @@ begin
     raise Exception.Create('Propriedade Usuario inválida.');
   end;
 
-  if Self.ConectadoRemoto then
+  if Self.IsRemoteConnected then
   begin
     DesconectarSocketClient;
   end;
@@ -494,11 +494,11 @@ begin
   xStatus := TMessageFactory.New;
   xStatus.UserName   := FUserName;
   xStatus.Params.Add('status.offline',EmptyStr);
-  EnviarMensagem(xStatus);
+  SendMessage(xStatus);
   sleep(50);
 end;
 
-procedure TSCOMessageCommon.StatusOnline(ADestinatario : string = '');
+procedure TSCOMessageCommon.SendStatusOnline(ADestinatario : string = '');
 var
   xStatus : IMessage;
 begin
@@ -510,16 +510,16 @@ begin
     xStatus.Destiny := ADestinatario;
   end;
   xStatus.Params.Add('status.online',EmptyStr);
-  EnviarMensagem(xStatus);
+  SendMessage(xStatus);
 end;
 
 procedure TSCOMessageCommon.DestruirServidorRemoto;
 begin
   {Destruir dados do servidor remoto}
-  if Assigned(FServidor) then
+  if Assigned(FServer) then
   begin
-    FServidor.DisposeOf;
-    FServidor := nil;
+    FServer.DisposeOf;
+    FServer := nil;
   end;
 end;
 
@@ -527,7 +527,7 @@ procedure TSCOMessageCommon.CriarThreadEnviar;
 begin
   DestruirThreadEnviar;
   FThreadEnvio                := TSCOSendThread.Create;
-  FThreadEnvio.RemoteServer := FServidor;
+  FThreadEnvio.RemoteServer := FServer;
   FThreadEnvio.TCPClient      := FSocketClient;
   FThreadEnvio.Start;
 end;
@@ -535,7 +535,7 @@ end;
 procedure TSCOMessageCommon.CriarThreadReconectar;
 begin
   DestruirThreadReconectar;
-  FThreadReconectar := TSCOReconectThread.Create(FServidor);
+  FThreadReconectar := TSCOReconectThread.Create(FServer);
 end;
 
 procedure TSCOMessageCommon.DestruirThreadEnviar;
@@ -636,11 +636,11 @@ begin
         if IsConnected then
         begin
           // disparar evento para o componente de reconectado
-          if Assigned(FOwner.FOnReconectar) then
+          if Assigned(FOwner.FOnReconnect) then
           begin
             TThread.Synchronize(nil, procedure
             begin
-              FOwner.FOnReconectar(Self.FOwner);
+              FOwner.FOnReconnect(Self.FOwner);
             end);
           end;
         end;

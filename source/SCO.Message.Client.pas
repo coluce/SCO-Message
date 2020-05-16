@@ -15,7 +15,7 @@ uses
 type
 
   TSCOClientProcessThread = class;
-  TSCOMessageClient          = class;
+  TSCOMessageClient = class;
 
   { TSCOListenerSendThread }
   TSCOListenerSendThread = class(TThread)
@@ -23,7 +23,7 @@ type
     { Private declarations }
     FException: Exception;
     FListener: ISCOMessageListener;
-    FMensagem: IMessage;
+    FMessage: IMessage;
     procedure DoHandleException;
   protected
     { Protected declarations }
@@ -32,14 +32,12 @@ type
   public
     { Public declarations }
     constructor Create(const AListener : ISCOMessageListener; const AMensagem: IMessage); reintroduce;
-    property Listener : ISCOMessageListener read FListener;
-    property Mensagem : IMessage read FMensagem;
   end;
 
   TSCOClientProcessThread = class(TThread)
   private
     FMessageClient: TSCOMessageClient;
-    procedure MsgStatus(AClienteMensageria : TSCOMessageClient; AMensagem: IMessage);
+    procedure MsgStatus(AMessageClient : TSCOMessageClient; AMessage: IMessage);
   protected
     procedure Execute; override;
   public
@@ -64,9 +62,9 @@ type
     { Public declarations }
     constructor Create(AOwner : TComponent); override;
     destructor  Destroy; override;
-    procedure   EnviarMensagem(AMensagem: IMessage); override;
+    procedure   SendMessage(AMensagem: IMessage); override;
 
-    procedure   VerificarOnline(ADestinatario : string);
+    procedure   IsTheUserOnline(AUserName: string);
     procedure   RequestActiveUsers;
     procedure   RegisterListener(const AListener: ISCOMessageListener);
     procedure   UnregisterListener(const AListener: ISCOMessageListener);
@@ -81,7 +79,7 @@ implementation
 
 procedure TSCOMessageClient.Close;
 begin
-  Self.ConectadoRemoto := False;
+  Self.IsRemoteConnected := False;
 end;
 
 procedure TSCOMessageClient.CriarThreadMonitora;
@@ -106,7 +104,7 @@ end;
 
 procedure TSCOMessageClient.Open;
 begin
-  Self.ConectadoRemoto := True;
+  Self.IsRemoteConnected := True;
 end;
 
 procedure TSCOMessageClient.RegisterListener(const AListener: ISCOMessageListener);
@@ -125,7 +123,7 @@ begin
   vMsg := TMessageFactory.New;
   vMsg.Destiny := 'servidor';
   vMsg.Params.Add('usuarios.online',EmptyStr);
-  EnviarMensagem(vMsg);
+  SendMessage(vMsg);
 end;
 
 procedure TSCOMessageClient.SendToServer(AMensagem: IMessage);
@@ -150,14 +148,14 @@ begin
   end;
 end;
 
-procedure TSCOMessageClient.VerificarOnline(ADestinatario: string);
+procedure TSCOMessageClient.IsTheUserOnline(AUserName: string);
 var
   vMsg: IMessage;
 begin
   vMsg := TMessageFactory.New;
-  vMsg.Destiny := ADestinatario;
+  vMsg.Destiny := AUserName;
   vMsg.Params.Add('status.verificacao',EmptyStr);
-  EnviarMensagem(vMsg);
+  SendMessage(vMsg);
 end;
 
 procedure TSCOMessageClient.DestruirThreadMonitora;
@@ -189,7 +187,7 @@ begin
   DestruirThreadMonitora;
 end;
 
-procedure TSCOMessageClient.EnviarMensagem(AMensagem: IMessage);
+procedure TSCOMessageClient.SendMessage(AMensagem: IMessage);
 begin
   Self.SendToServer(AMensagem);
 end;
@@ -255,13 +253,13 @@ begin
   end;
 end;
 
-procedure TSCOClientProcessThread.MsgStatus(AClienteMensageria: TSCOMessageClient; AMensagem: IMessage);
+procedure TSCOClientProcessThread.MsgStatus(AMessageClient: TSCOMessageClient; AMessage: IMessage);
 begin
-  if AMensagem.Params.ContainsKey('status.verificacao') then
+  if AMessage.Params.ContainsKey('status.verificacao') then
   begin
-    if AMensagem.Destiny = AClienteMensageria.UserName then
+    if AMessage.Destiny = AMessageClient.UserName then
     begin
-      AClienteMensageria.StatusOnline(AMensagem.UserName);
+      AMessageClient.SendStatusOnline(AMessage.UserName);
     end;
   end;
 end;
@@ -273,7 +271,7 @@ begin
   inherited Create(False);
   FreeOnTerminate := True;
   FListener := AListener;
-  FMensagem := AMensagem;
+  FMessage := AMensagem;
   FException := nil;
 end;
 
@@ -288,14 +286,14 @@ end;
 
 procedure TSCOListenerSendThread.Execute;
 begin
-  if Assigned(Listener) then
+  if Assigned(FListener) then
   begin
     try
       Synchronize(
         Self,
         procedure
         begin
-          Listener.DoReceiveMessage(nil, Mensagem);
+          FListener.DoReceiveMessage(nil, FMessage);
         end
       );
     except
