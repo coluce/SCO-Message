@@ -16,23 +16,23 @@ type
     EditUsuario: TEdit;
     btnSendMessage: TButton;
     edtMessage: TEdit;
-    edtDestinatario: TEdit;
-    Button1: TButton;
+    edtReceiver: TEdit;
+    btnConnect: TButton;
     ListView1: TListView;
     StatusBar1: TStatusBar;
     Timer1: TTimer;
     Switch1: TSwitch;
     BindingsList1: TBindingsList;
     LinkControlToPropertyEnabled: TLinkControlToProperty;
-    Clear: TButton;
+    btnClear: TButton;
     SCOMessageClient: TSCOMessageClient;
     procedure btnSendMessageClick(Sender: TObject);
     procedure MensageriaCliente1Conectar(Sender: TObject);
     procedure MensageriaCliente1Desconectar(Sender: TObject);
     procedure MensageriaCliente1Reconectar(Sender: TObject);
-    procedure Button1Click(Sender: TObject);
+    procedure btnConnectClick(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
-    procedure ClearClick(Sender: TObject);
+    procedure btnClearClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure SCOMessageClientReceberMensagem(Sender: TObject;
       AMensagem: IMessage);
@@ -59,7 +59,7 @@ begin
   end;
 end;
 
-procedure TForm1.ClearClick(Sender: TObject);
+procedure TForm1.btnClearClick(Sender: TObject);
 begin
   ListView1.Items.Clear;
 end;
@@ -76,11 +76,11 @@ var
 begin
   vMsg := TMessageFactory.New;
   vMsg.Params.Add('chat',edtMessage.Text);
-  vMsg.Destiny := edtDestinatario.Text;
+  vMsg.Destiny := edtReceiver.Text;
   SCOMessageClient.EnviarMensagem(vMsg);
 end;
 
-procedure TForm1.Button1Click(Sender: TObject);
+procedure TForm1.btnConnectClick(Sender: TObject);
 begin
   if SCOMessageClient.ConectadoRemoto then
   begin

@@ -3,10 +3,10 @@
         <ProjectGuid>{595A33CC-F511-484A-B387-1D3465140CE2}</ProjectGuid>
     </PropertyGroup>
     <ItemGroup>
-        <Projects Include="server\ProjectServer.dproj">
+        <Projects Include="client\ProjectClient.dproj">
             <Dependencies/>
         </Projects>
-        <Projects Include="client\ProjectClient.dproj">
+        <Projects Include="server\ProjectServer.dproj">
             <Dependencies/>
         </Projects>
     </ItemGroup>
@@ -17,15 +17,6 @@
             <Default.Personality/>
         </BorlandProject>
     </ProjectExtensions>
-    <Target Name="ProjectServer">
-        <MSBuild Projects="server\ProjectServer.dproj"/>
-    </Target>
-    <Target Name="ProjectServer:Clean">
-        <MSBuild Projects="server\ProjectServer.dproj" Targets="Clean"/>
-    </Target>
-    <Target Name="ProjectServer:Make">
-        <MSBuild Projects="server\ProjectServer.dproj" Targets="Make"/>
-    </Target>
     <Target Name="ProjectClient">
         <MSBuild Projects="client\ProjectClient.dproj"/>
     </Target>
@@ -35,14 +26,23 @@
     <Target Name="ProjectClient:Make">
         <MSBuild Projects="client\ProjectClient.dproj" Targets="Make"/>
     </Target>
+    <Target Name="ProjectServer">
+        <MSBuild Projects="server\ProjectServer.dproj"/>
+    </Target>
+    <Target Name="ProjectServer:Clean">
+        <MSBuild Projects="server\ProjectServer.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="ProjectServer:Make">
+        <MSBuild Projects="server\ProjectServer.dproj" Targets="Make"/>
+    </Target>
     <Target Name="Build">
-        <CallTarget Targets="ProjectServer;ProjectClient"/>
+        <CallTarget Targets="ProjectClient;ProjectServer"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="ProjectServer:Clean;ProjectClient:Clean"/>
+        <CallTarget Targets="ProjectClient:Clean;ProjectServer:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="ProjectServer:Make;ProjectClient:Make"/>
+        <CallTarget Targets="ProjectClient:Make;ProjectServer:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>

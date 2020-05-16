@@ -48,8 +48,6 @@ implementation
 
 {$R *.fmx}
 
-uses Jsons;
-
 procedure TServerPrincipal.FormCreate(Sender: TObject);
 begin
   SCOMessageServer.UserName := TGUID.NewGuid.ToString;

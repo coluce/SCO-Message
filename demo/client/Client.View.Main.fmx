@@ -17,7 +17,7 @@ object Form1: TForm1
     Size.Width = 193.000000000000000000
     Size.Height = 22.000000000000000000
     Size.PlatformDefault = False
-    TextPrompt = 'meu usuario'
+    TextPrompt = 'my username'
   end
   object btnSendMessage: TButton
     Anchors = [akRight, akBottom]
@@ -37,22 +37,22 @@ object Form1: TForm1
     Size.Width = 339.000000000000000000
     Size.Height = 22.000000000000000000
     Size.PlatformDefault = False
-    TextPrompt = 'mensagem'
+    TextPrompt = 'message'
   end
-  object edtDestinatario: TEdit
+  object edtReceiver: TEdit
     Touch.InteractiveGestures = [LongTap, DoubleTap]
     Anchors = [akLeft, akBottom]
     TabOrder = 1
     Position.X = 8.000000000000000000
     Position.Y = 312.000000000000000000
-    TextPrompt = 'destinatario'
+    TextPrompt = 'receiver'
   end
-  object Button1: TButton
+  object btnConnect: TButton
     Position.X = 208.000000000000000000
     Position.Y = 8.000000000000000000
     TabOrder = 6
-    Text = 'Conectar'
-    OnClick = Button1Click
+    Text = 'Connect'
+    OnClick = btnConnectClick
   end
   object ListView1: TListView
     ItemAppearanceClassName = 'TListItemAppearance'
@@ -85,13 +85,13 @@ object Form1: TForm1
     Size.PlatformDefault = False
     TabOrder = 14
   end
-  object Clear: TButton
+  object btnClear: TButton
     Anchors = [akTop, akRight]
     Position.X = 506.000000000000000000
     Position.Y = 8.000000000000000000
     TabOrder = 16
-    Text = 'Clear'
-    OnClick = ClearClick
+    Text = 'btnClear'
+    OnClick = btnClearClick
   end
   object Timer1: TTimer
     Enabled = False

@@ -7,14 +7,8 @@ Coordinates=10,188,73,51
 [EditUsuario]
 Coordinates=104,188,72,51
 
-[Button1]
-Coordinates=127,10,53,51
-
 [btnSendMessage]
 Coordinates=271,10,99,51
-
-[edtDestinatario]
-Coordinates=395,10,89,51
 
 [MensageriaCliente1]
 Coordinates=229,155,111,33
@@ -36,4 +30,10 @@ Coordinates=160,283,91,36
 
 [BindingsList1]
 Coordinates=118,80,82,33
+
+[btnConnect]
+Coordinates=127,10,53,51
+
+[edtReceiver]
+Coordinates=395,10,89,51
 
