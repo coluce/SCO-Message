@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONFIG>
+  <Package Version="5">
+    <Name Value="sco_message"/>
+    <Type Value="RunAndDesignTime"/>
+    <CompilerOptions>
+      <Version Value="11"/>
+      <SearchPaths>
+        <OtherUnitFiles Value="../../source"/>
+        <UnitOutputDirectory Value="lib/$(TargetCPU)-$(TargetOS)"/>
+      </SearchPaths>
+    </CompilerOptions>
+    <Files>
+      <Item>
+        <Filename Value="../../source/SCO.Message.Base.pas"/>
+        <UnitName Value="SCO.Message.Base"/>
+      </Item>
+      <Item>
+        <Filename Value="../../source/SCO.Message.Client.pas"/>
+        <UnitName Value="SCO.Message.Client"/>
+      </Item>
+      <Item>
+        <Filename Value="../../source/SCO.Message.Functions.pas"/>
+        <UnitName Value="SCO.Message.Functions"/>
+      </Item>
+      <Item>
+        <Filename Value="../../source/SCO.Message.Imp.pas"/>
+        <UnitName Value="SCO.Message.Imp"/>
+      </Item>
+      <Item>
+        <Filename Value="../../source/SCO.Message.Interfaces.pas"/>
+        <UnitName Value="SCO.Message.Interfaces"/>
+      </Item>
+      <Item>
+        <Filename Value="../../source/SCO.Message.Register.pas"/>
+        <HasRegisterProc Value="True"/>
+        <UnitName Value="SCO.Message.Register"/>
+      </Item>
+      <Item>
+        <Filename Value="../../source/SCO.Message.Route.Controller.pas"/>
+        <UnitName Value="SCO.Message.Route.Controller"/>
+      </Item>
+      <Item>
+        <Filename Value="../../source/SCO.Message.Route.pas"/>
+        <UnitName Value="SCO.Message.Route"/>
+      </Item>
+      <Item>
+        <Filename Value="../../source/SCO.Message.Server.pas"/>
+        <UnitName Value="SCO.Message.Server"/>
+      </Item>
+      <Item>
+        <Filename Value="../../source/SCO.Message.Zip.pas"/>
+        <UnitName Value="SCO.Message.Zip"/>
+      </Item>
+    </Files>
+    <RequiredPkgs>
+      <Item>
+        <PackageName Value="indylaz"/>
+      </Item>
+      <Item>
+        <PackageName Value="FCL"/>
+      </Item>
+    </RequiredPkgs>
+    <UsageOptions>
+      <UnitPath Value="$(PkgOutDir)"/>
+    </UsageOptions>
+    <PublishOptions>
+      <Version Value="2"/>
+      <UseFileFilters Value="True"/>
+    </PublishOptions>
+  </Package>
+</CONFIG>
